@@ -1,0 +1,17 @@
+    <!-- Results -->
+    <section id="results" hidden>
+      <div class="results-header">
+        <h2>Results <span id="result-count" class="badge"></span></h2>
+        <div class="results-actions">
+          <button id="download-all-btn" class="secondary-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download All (.zip)
+          </button>
+          <button id="clear-btn" class="ghost-btn">Clear</button>
+        </div>
+      </div>
+      <div id="cards-container"{% if grid %} class="result-grid"{% endif %}></div>
+    </section>

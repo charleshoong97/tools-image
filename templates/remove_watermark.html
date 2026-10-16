@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% from "_macros.html" import upload_zone %}
+{% block title %}Watermark Remover{% endblock %}
+
+{% block content %}
+    <div class="page-intro">
+      <h1>Remove Watermark</h1>
+      <p>Paint over a watermark, logo, date stamp or unwanted object and it will be filled in from the surrounding image.
+        Only edit images you own or have permission to modify.</p>
+    </div>
+
+    {{ upload_zone(multiple=False) }}
+
+    <section class="panel editor" id="editor" hidden>
+      <div class="editor-toolbar">
+        <div class="segmented" role="radiogroup" aria-label="Selection tool">
+          <label><input type="radio" name="tool" value="brush" checked /><span>Brush</span></label>
+          <label><input type="radio" name="tool" value="rect" /><span>Rectangle</span></label>
+        </div>
+        <label class="brush-size" id="brush-size-field">
+          <span>Size</span>
+          <input type="range" id="brush-size" min="4" max="120" value="28" />
+        </label>
+        <div class="toolbar-group">
+          <button type="button" class="ghost-btn" id="undo-stroke-btn" title="Undo (Ctrl+Z)">Undo</button>
+          <button type="button" class="ghost-btn" id="clear-mask-btn">Clear</button>
+        </div>
+      </div>
+
+      <div class="canvas-area" id="canvas-area">
+        <div class="canvas-stack checkerboard" id="canvas-stack">
+          <canvas id="image-canvas"></canvas>
+          <canvas id="mask-canvas" aria-label="Paint over the area to remove"></canvas>
+          <div class="brush-cursor" id="brush-cursor" hidden></div>
+        </div>
+      </div>
+
+      <div class="editor-actions">
+        <button type="button" class="primary-btn" id="process-btn" disabled>Remove Watermark</button>
+        <button type="button" class="secondary-btn" id="download-btn" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download
+        </button>
+        <button type="button" class="ghost-btn" id="compare-btn" disabled title="Hold to see the original">Hold to compare</button>
+        <button type="button" class="ghost-btn" id="undo-removal-btn" disabled>Undo removal</button>
+        <button type="button" class="ghost-btn" id="new-image-btn">New image</button>
+      </div>
+    </section>
+    <p class="hint" id="editor-hint" hidden>Tip: paint a little beyond the watermark's edges. If traces remain, paint over them and run it again.</p>
+
+    {% include "_feedback.html" %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="/static/js/remove-watermark.js"></script>
+{% endblock %}
