@@ -84,6 +84,21 @@ def test_compress_keeps_names_and_zip(client):
     assert zipfile.ZipFile(io.BytesIO(resp.data)).namelist() == ["Photo_compressed.JPG", "a_compressed.png"]
 
 
+@pytest.mark.parametrize("fmt, name", [("JPEG", "phone.jpg"), ("PNG", "phone.png")])
+def test_compress_applies_exif_orientation(client, fmt, name):
+    # Orientation 6 = rotate 90° CW for display, as phones store portrait shots
+    exif = Image.Exif()
+    exif[0x0112] = 6
+    resp = client.post("/compress", data={
+        "session_id": SESSION, "files[]": [upload(image_bytes(fmt, (200, 120), exif=exif.tobytes()), name)],
+    })
+    result = resp.get_json()["results"][0]
+    assert (result["width"], result["height"]) == (120, 200)
+    img, _ = open_result(client, result)
+    assert img.size == (120, 200)
+    assert img.getexif().get(0x0112) is None
+
+
 def test_session_can_be_deleted_by_beacon_post(client):
     client.post("/compress", data={"session_id": SESSION, "files[]": [upload(image_bytes(), "a.jpg")]})
     assert SESSION in app_module._store
