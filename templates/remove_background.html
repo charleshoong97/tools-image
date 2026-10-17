@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% from "_macros.html" import upload_zone %}
+{% block title %}Background Remover{% endblock %}
+
+{% block content %}
+    <div class="page-intro">
+      <h1>Remove Background</h1>
+      <p>Automatically cut out the main subject of your photos, such as people, products, animals or cars.</p>
+    </div>
+
+    {{ upload_zone() }}
+
+    <section class="panel">
+      <div class="field">
+        <span class="field-label" id="background-label">Background</span>
+        <div class="segmented" role="radiogroup" aria-labelledby="background-label">
+          <label><input type="radio" name="background" value="transparent" checked /><span>Transparent</span></label>
+          <label><input type="radio" name="background" value="#ffffff" /><span>White</span></label>
+          <label><input type="radio" name="background" value="custom" /><span>Color</span></label>
+        </div>
+        <input type="color" id="bg-color" value="#0ea5e9" aria-label="Background color" hidden />
+      </div>
+      <button id="process-btn" class="primary-btn" disabled>Remove Background</button>
+    </section>
+    <p class="hint">Transparent results are saved as PNG. The first image may take a little longer while the model loads.</p>
+
+    {% include "_feedback.html" %}
+
+    {% with grid=True %}{% include "_results.html" %}{% endwith %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="/static/js/remove-background.js"></script>
+{% endblock %}

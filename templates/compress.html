@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% from "_macros.html" import upload_zone %}
+{% block title %}Image Compressor{% endblock %}
+
+{% block content %}
+    <div class="page-intro">
+      <h1>Compress Images</h1>
+      <p>Shrink JPEG and PNG files while keeping them looking sharp.</p>
+    </div>
+
+    {{ upload_zone(accept=".jpg,.jpeg,.png", formats="Supports JPEG &amp; PNG") }}
+
+    <!-- Controls -->
+    <section id="controls">
+      <div class="control-row">
+        <label for="quality-slider" id="quality-label">Quality: 75</label>
+        <div class="slider-wrap">
+          <span class="slider-hint">Smaller</span>
+          <input type="range" id="quality-slider" min="1" max="100" value="75" />
+          <span class="slider-hint">Better</span>
+        </div>
+      </div>
+      <button id="compress-btn" class="primary-btn" disabled>
+        Compress Images
+      </button>
+    </section>
+
+    {% include "_feedback.html" %}
+
+    {% include "_results.html" %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="/static/js/compress.js"></script>
+{% endblock %}

@@ -2,8 +2,14 @@ services:
   - type: web
     name: compress-images
     runtime: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    # Downloading the background removal model at build time keeps first use fast.
+    buildCommand: pip install -r requirements.txt && python bg_remover.py
+    # Background removal and watermark removal can take several seconds on small instances.
+    startCommand: gunicorn app:app --timeout 120
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
+      # u2netp fits a 512 MB instance. u2net (~550 MB peak) or
+      # isnet-general-use (~800 MB peak, best quality) need a larger plan.
+      - key: BG_REMOVAL_MODEL
+        value: u2netp

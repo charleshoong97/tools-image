@@ -1,3 +1,6 @@
 Flask==3.1.0
 Pillow==11.2.1
 gunicorn==23.0.0
+numpy==2.4.6
+onnxruntime==1.31.0
+opencv-contrib-python-headless==5.0.0.93

@@ -1,5 +1,5 @@
 import io
-from PIL import Image, UnidentifiedImageError
+from PIL import Image, ImageOps, UnidentifiedImageError
 
 
 class CompressionError(Exception):
@@ -28,6 +28,10 @@ def compress_image(file_bytes: bytes, filename: str, quality: int) -> dict:
         img.load()  # force decode so errors surface here
     except (UnidentifiedImageError, Exception) as e:
         raise CompressionError(f"Cannot open image '{filename}': {e}")
+
+    # EXIF is stripped on save below, so bake its orientation into the pixels
+    # first; otherwise portrait phone photos come out sideways.
+    ImageOps.exif_transpose(img, in_place=True)
 
     width, height = img.size
     output = io.BytesIO()

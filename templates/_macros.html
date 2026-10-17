@@ -1,0 +1,12 @@
+{% macro upload_zone(accept=".jpg,.jpeg,.png,.webp", formats="Supports JPEG, PNG &amp; WebP", multiple=True) %}
+    <section id="upload-zone" role="button" tabindex="0" aria-label="Drop {{ 'images' if multiple else 'an image' }} here or click to select">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/>
+        <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+      </svg>
+      <p class="upload-label">Drag &amp; drop {{ 'images' if multiple else 'an image' }} here</p>
+      <p class="upload-sub">or <span class="link-text">browse files</span></p>
+      <p class="upload-formats">{{ formats|safe }} &nbsp;&bull;&nbsp; Max 20 MB each</p>
+      <input type="file" id="file-input" accept="{{ accept }}"{% if multiple %} multiple{% endif %} hidden />
+    </section>
+{% endmacro %}

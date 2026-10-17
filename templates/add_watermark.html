@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% from "_macros.html" import upload_zone %}
+{% block title %}Add Watermark{% endblock %}
+
+{% block content %}
+    <div class="page-intro">
+      <h1>Add Watermark</h1>
+      <p>Stamp text or your logo onto one or many images at once.</p>
+    </div>
+
+    {{ upload_zone() }}
+
+    <div class="watermark-layout">
+      <!-- Live preview -->
+      <section class="panel preview-panel">
+        <div class="preview-frame">
+          <p class="preview-empty" id="preview-empty">Select images to see a preview</p>
+          <img id="preview-img" class="checkerboard" alt="Watermark preview" hidden />
+          <div class="preview-busy" id="preview-busy" hidden></div>
+        </div>
+        <div class="preview-nav" id="preview-nav" hidden>
+          <button type="button" class="ghost-btn" id="preview-prev" aria-label="Previous image">&#8249;</button>
+          <span id="preview-name"></span>
+          <button type="button" class="ghost-btn" id="preview-next" aria-label="Next image">&#8250;</button>
+        </div>
+      </section>
+
+      <!-- Options -->
+      <section class="panel options-panel">
+        <div class="field">
+          <span class="field-label" id="type-label">Watermark</span>
+          <div class="segmented" role="radiogroup" aria-labelledby="type-label">
+            <label><input type="radio" name="wm-type" value="text" checked /><span>Text</span></label>
+            <label><input type="radio" name="wm-type" value="image" /><span>Image</span></label>
+          </div>
+        </div>
+
+        <div id="text-options" class="field-group">
+          <div class="field">
+            <label class="field-label" for="wm-text">Text</label>
+            <input type="text" id="wm-text" class="text-input" value="© Your Name" maxlength="200" />
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="wm-font">Font</label>
+              <select id="wm-font" class="text-input">
+                <option value="sans">Sans-serif</option>
+                <option value="serif">Serif</option>
+                <option value="mono">Monospace</option>
+                <option value="script">Handwriting</option>
+              </select>
+            </div>
+            <div class="field field-narrow">
+              <label class="field-label" for="wm-color">Color</label>
+              <input type="color" id="wm-color" value="#ffffff" />
+            </div>
+          </div>
+          <label class="check"><input type="checkbox" id="wm-bold" checked /> Bold</label>
+        </div>
+
+        <div id="image-options" class="field-group" hidden>
+          <div class="field">
+            <span class="field-label">Logo</span>
+            <label class="secondary-btn file-btn">
+              Choose image…
+              <input type="file" id="wm-logo" accept=".png,.jpg,.jpeg,.webp" hidden />
+            </label>
+            <span class="hint" id="wm-logo-name">PNG with a transparent background works best</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="field-label" id="position-label">Position</span>
+          <div class="position-picker" role="radiogroup" aria-labelledby="position-label">
+            <div class="position-grid">
+              {% for value, label in [
+                ("top-left", "Top left"), ("top", "Top"), ("top-right", "Top right"),
+                ("left", "Left"), ("center", "Center"), ("right", "Right"),
+                ("bottom-left", "Bottom left"), ("bottom", "Bottom"), ("bottom-right", "Bottom right"),
+              ] %}
+              <button type="button" role="radio" data-position="{{ value }}" aria-label="{{ label }}" title="{{ label }}"
+                      aria-checked="{{ 'true' if value == 'bottom-right' else 'false' }}"><span></span></button>
+              {% endfor %}
+            </div>
+            <button type="button" role="radio" class="tile-btn" data-position="tile" aria-checked="false">Tile across image</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="wm-size">Size <output id="wm-size-out">25%</output></label>
+          <input type="range" id="wm-size" min="5" max="100" value="25" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="wm-opacity">Opacity <output id="wm-opacity-out">50%</output></label>
+          <input type="range" id="wm-opacity" min="5" max="100" value="50" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="wm-rotation">Rotation <output id="wm-rotation-out">0°</output></label>
+          <input type="range" id="wm-rotation" min="-90" max="90" value="0" />
+        </div>
+        <div class="field" id="margin-field">
+          <label class="field-label" for="wm-margin">Margin <output id="wm-margin-out">3%</output></label>
+          <input type="range" id="wm-margin" min="0" max="20" value="3" />
+        </div>
+        <div class="field" id="spacing-field" hidden>
+          <label class="field-label" for="wm-spacing">Spacing <output id="wm-spacing-out">10%</output></label>
+          <input type="range" id="wm-spacing" min="0" max="50" value="10" />
+        </div>
+
+        <button id="process-btn" class="primary-btn" disabled>Apply Watermark</button>
+      </section>
+    </div>
+
+    {% include "_feedback.html" %}
+
+    {% with grid=True %}{% include "_results.html" %}{% endwith %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="/static/js/add-watermark.js"></script>
+{% endblock %}
